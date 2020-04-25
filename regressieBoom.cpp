@@ -7,13 +7,14 @@
 using namespace std;
 
 
+
 class Node {
 public:
     string elt;
     Node* par;
-    Node* child1;
-    Node* child2;
-    Node() : elt(), par(NULL), child1(NULL), child2(NULL) {}; //constructor
+    Node* left;
+    Node* right;
+   Node() : elt(), par(NULL), left(NULL), right(NULL) {}; //constructor
 };
 
 class Tree {
@@ -21,8 +22,9 @@ public:
 
     class Position { //node position
     private:
-        Node* v;
+        
     public:
+        Node* v;
         string& operator*(); //get element   geen idee wa deze hoort te doen???
         Position child1() const; //get node’s pos.
         Position child2() const; //get node's pos.
@@ -35,27 +37,30 @@ public:
     bool empty() const; //is tree empty?
     Position root() const; //get the root
     void estimate() const;
+    void print() const; //printing the tree
+    void read() const;
+    Tree() : PositionList() {};
+    ~Tree() { PositionList.clear(); };
 };
 
-Tree::Tree() {
-    
-}
 
-Tree::Position::Position() {
+//globale variabelen
+Tree boom;
+Tree::Position position1;
+Tree::Position position2;
+Tree::Position position3;
 
-}
 
-Tree::~Tree() {
-    PositionList.clear();
-}
 
-Tree::Position Tree::Position::child1() const {
-    Tree pos;
-    for (Position const& i : pos.PositionList) //moet ik nog een oplossing voor zoeken
-    {
+//Tree::Position Tree::Position::child1() const {
+//    
+//    for (Position const& i : boom.PositionList) //moet ik nog een oplossing voor zoeken
+//    {
+//
+//    }
+//}
 
-    }
-}
+
 
 
 Tree::Position Tree::root() const {
@@ -92,13 +97,15 @@ bool Tree::Position::isRoot() const {
 }
 
 bool Tree::Position::isExternal() const {
-    if (v->child1 == NULL && v->child2 == 0) {
+    if (v->left == NULL && v->right == 0) {
         return true;
     }
     else {
         return false;
     }
 }
+
+
 
 void Tree::estimate() const {
     string naam;
@@ -107,28 +114,38 @@ void Tree::estimate() const {
 
     cout << "Model: ";
     getline(cin, naam);
-    //vergelijking met naam, if B3, give prijs
+    Position root;
+    root = boom.root();
 
-    cout << "Leslie: ";
-    getline(cin, leslie);
-    //leslie yes or no, naargelang tak volgen
+    if (naam == "B3") {
+        cout << root.v->elt << endl;
+    }
+    else {
+       cout <<  root.v->right->elt << endl;
+    }
 
-    cout << "Conditie: ";
-    getline(cin, conditie);
-    // naargelang conditie prijs geven
+    ////vergelijking met naam, if B3, give prijs
 
-    cout << "De geschatte prijs is: " << endl; // de prijs hier invoegen
+    //cout << "Leslie: ";
+    //getline(cin, leslie);
+    ////leslie yes or no, naargelang tak volgen
+
+    //cout << "Conditie: ";
+    //getline(cin, conditie);
+    //// naargelang conditie prijs geven
+
+    //cout << "De geschatte prijs is: " << endl; // de prijs hier invoegen
 }
 
 int main()
 {
-    const int depths = 5;
+    const int depths = 1;
     // Filenames of the rule files
     const string ruleFiles[depths] = {
-        "./tree_gen/rules_d1.json",
-        "./tree_gen/rules_d2.json",
-        "./tree_gen/rules_d3.json",
-        "./tree_gen/rules_d4.json",
+        //"./tree_gen/rules_d1.json"
+        //"./tree_gen/rules_d2.json",
+        //"./tree_gen/rules_d3.json",
+        //"./tree_gen/rules_d4.json",
         "./tree_gen/rules_d5.json"
     };
     try {
@@ -155,9 +172,33 @@ int main()
         cerr << msg << endl;
     }
 
+    Node* node1;
+    Node* node2;
+    Node* node3;
+
+
+    node1->elt = "model_B3 > 0.5";
+    node2->elt = "4513 of price";
+    node3->elt = "condition_fair > 0.5";
+    node1->left = node2;
+    node1->right = node3;
+    node2->par = node1;
+    node3->par = node1;
+
+
+    position1.v = node1;
+    position2.v = node2;
+    position3.v = node3;
+
+    boom.PositionList.push_back(position1);
+    boom.PositionList.push_back(position2);
+    boom.PositionList.push_back(position3);
+    boom.estimate();
+
     // Wait for user confirmation
     cout << endl << "Press enter to continue..." << endl;
     cin.get();
+    boom.~Tree();
     return 0;
 }
 
@@ -198,7 +239,7 @@ void readJSON(std::ifstream& fileStream, int l)
                 //Print contents of name field (either a condition or target field e.g. price)
                 indent(l);
                 cout << name << endl;
-
+                
             }
             else if (key == "children")
             {
