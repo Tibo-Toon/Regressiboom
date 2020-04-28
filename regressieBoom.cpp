@@ -14,6 +14,7 @@ public:
     Node* par;
     Node* left;
     Node* right;
+    Node* newNode(string elt);
    Node() : elt(), par(NULL), left(NULL), right(NULL) {}; //constructor
 };
 
@@ -25,9 +26,6 @@ public:
         
     public:
         Node* v;
-        string& operator*(); //get element   geen idee wa deze hoort te doen???
-        Position child1() const; //get node’s pos.
-        Position child2() const; //get node's pos.
         bool isRoot() const; //root node?
         bool isExternal() const; //external node?
         friend class Tree;
@@ -38,7 +36,7 @@ public:
     Position root() const; //get the root
     void estimate() const;
     void print() const; //printing the tree
-    void read() const;
+    void read() const; //maakt de tree aan
     Tree() : PositionList() {};
     ~Tree() { PositionList.clear(); };
 };
@@ -49,19 +47,94 @@ Tree boom;
 Tree::Position position1;
 Tree::Position position2;
 Tree::Position position3;
+Tree::Position position4;
+Tree::Position position5;
+Tree::Position position6;
+Tree::Position position7;
+Tree::Position position8;
+Tree::Position position9;
+Tree::Position position10;
+Tree::Position position11;
+Tree::Position position12;
+Tree::Position position13;
+Tree::Position position14;
+Tree::Position position15;
+Node rootNode;
+Node* rootP = rootNode.newNode("Model_B5 > 0.5");
 
 
+void Tree::print() const {
+    Position root = boom.root();
+    cout << "    De ingevoerde data wordt door deze boom gehaald" << endl;
+    cout << "----------------------------------------------------------" << endl;
+    cout << " \t \t" << root.v->elt << endl;
+    cout << root.v->left->elt << "\t\t\t\t" << root.v->right->elt << endl;
+    cout << "\t\t\t" << root.v->right->left->elt << "\t\t\t" << root.v->right->right->elt << endl;
+    cout << "\n\t" << root.v->right->left->left->elt << "\t\t" << root.v->right->left->right->elt << "\t" << root.v->right->right->left->elt << "\t\t" << root.v->right->right->right->elt << endl;
+    cout << "\n\t" << root.v->right->left->right->left->elt << "\t\t" << root.v->right->left->right->right->elt << "\t\t" << root.v->right->right->right->left->elt << "\t" << root.v->right->right->right->right->elt << endl;
+    cout << "\t\t\t\t\t\t\t\t" << root.v->right->right->right->right->left->elt << "\t" << root.v->right->right->right->right->right->elt << endl;
+}
 
-//Tree::Position Tree::Position::child1() const {
-//    
-//    for (Position const& i : boom.PositionList) //moet ik nog een oplossing voor zoeken
-//    {
-//
-//    }
-//}
+void Tree::read() const {
+    rootP->left = rootNode.newNode("4513 of price");
+    rootP->right = rootNode.newNode("Condition_fair > 0.5");
 
+    rootP->right->left = rootNode.newNode("Leslie_yes > 0.5");
+    rootP->right->left->left = rootNode.newNode("625 of price");
+    rootP->right->left->right = rootNode.newNode("Model_T202 > 0.5");
+    rootP->right->left->right->left = rootNode.newNode("99 of price");
+    rootP->right->left->right->right = rootNode.newNode("77 of price");
 
+    rootP->right->right = rootNode.newNode("Model_T202 > 0.5");
+    rootP->right->right->left = rootNode.newNode("270 of Price");
+    rootP->right->right->right = rootNode.newNode("Model_M102 > 0.5");
+    rootP->right->right->right->left = rootNode.newNode("87 of price");
+    rootP->right->right->right->right = rootNode.newNode("Condition_good > 0.5");
+    rootP->right->right->right->right->left = rootNode.newNode("1475 of price");
+    rootP->right->right->right->right->right = rootNode.newNode("1770 of price");
 
+    position1.v = rootP;
+    position2.v = rootP->left;
+    position3.v = rootP->right;
+
+    position4.v = rootP->right->left;
+    position5.v = rootP->right->left->left;
+    position6.v = rootP->right->left->right;
+    position7.v = rootP->right->left->right->left;
+    position8.v = rootP->right->left->right->right;
+
+    position9.v = rootP->right->right;
+    position10.v = rootP->right->right->left;
+    position11.v = rootP->right->right->right;
+    position12.v = rootP->right->right->right->left;
+    position13.v = rootP->right->right->right->right;
+    position14.v = rootP->right->right->right->right->left;
+    position15.v = rootP->right->right->right->right->right;
+
+    boom.PositionList.push_back(position1);
+    boom.PositionList.push_back(position2);
+    boom.PositionList.push_back(position3);
+    boom.PositionList.push_back(position4);
+    boom.PositionList.push_back(position5);
+    boom.PositionList.push_back(position6);
+    boom.PositionList.push_back(position7);
+    boom.PositionList.push_back(position8);
+    boom.PositionList.push_back(position9);
+    boom.PositionList.push_back(position10);
+    boom.PositionList.push_back(position11);
+    boom.PositionList.push_back(position12);
+    boom.PositionList.push_back(position13);
+    boom.PositionList.push_back(position14);
+    boom.PositionList.push_back(position15);
+}
+
+Node* Node::newNode(string elt) {
+    Node* node = new Node;
+    node->elt = elt;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
 
 Tree::Position Tree::root() const {
     for (auto const& i : PositionList) //loopt alle elementen af in de list
@@ -111,30 +184,58 @@ void Tree::estimate() const {
     string naam;
     string leslie;
     string conditie;
+    string schatting;
 
-    cout << "Model: ";
+    cout << "Model: "; //vergelijking met naam, if B3, give prijs
     getline(cin, naam);
+    cout << "Leslie: ";   //leslie yes or no, naargelang tak volgen
+    getline(cin, leslie);
+    cout << "Conditie: ";
+    getline(cin, conditie);  // naargelang conditie prijs geven
+  
+
     Position root;
     root = boom.root();
 
     if (naam == "B3") {
-        cout << root.v->elt << endl;
+        schatting = root.v->left->elt;
+    }
+    else if(conditie == "fair") {
+        if (leslie == "yes") {
+            schatting = root.v->right->left->left->elt;// 625 of price
+        }
+        else if (naam == "T202") {
+            schatting = root.v->right->left->right->left->elt; //99 of price
+        }
+        else
+        {
+            schatting = root.v->right->left->right->right->elt; // 77 of price
+        }
     }
     else {
-       cout <<  root.v->right->elt << endl;
+         if (naam == "T202") {
+             schatting = root.v->right->right->left->elt;//270 of price
     }
+         else {
+                if (naam == "M102") {
+                    schatting = root.v->right->right->right->left->elt; //87 of price
+    }
+                else {
+                         if (conditie == "good") {
+                             schatting = root.v->right->right->right->right->left->elt;  //1475 of price
+    }
+                         else {
+                             schatting = root.v->right->right->right->right->right->elt;     //1770 of price
+    }
+                }
 
-    ////vergelijking met naam, if B3, give prijs
+         }
+      
+    }
+   
+    
 
-    //cout << "Leslie: ";
-    //getline(cin, leslie);
-    ////leslie yes or no, naargelang tak volgen
-
-    //cout << "Conditie: ";
-    //getline(cin, conditie);
-    //// naargelang conditie prijs geven
-
-    //cout << "De geschatte prijs is: " << endl; // de prijs hier invoegen
+    cout << "De geschatte prijs is: " << schatting << endl; // de prijs hier invoegen
 }
 
 int main()
@@ -146,7 +247,7 @@ int main()
         //"./tree_gen/rules_d2.json",
         //"./tree_gen/rules_d3.json",
         //"./tree_gen/rules_d4.json",
-        "./tree_gen/rules_d5.json"
+        //"./tree_gen/rules_d5.json"
     };
     try {
         // Load the tree a bunch of times
@@ -171,34 +272,14 @@ int main()
     catch (const char* msg) {
         cerr << msg << endl;
     }
-
-    Node* node1;
-    Node* node2;
-    Node* node3;
-
-
-    node1->elt = "model_B3 > 0.5";
-    node2->elt = "4513 of price";
-    node3->elt = "condition_fair > 0.5";
-    node1->left = node2;
-    node1->right = node3;
-    node2->par = node1;
-    node3->par = node1;
-
-
-    position1.v = node1;
-    position2.v = node2;
-    position3.v = node3;
-
-    boom.PositionList.push_back(position1);
-    boom.PositionList.push_back(position2);
-    boom.PositionList.push_back(position3);
+    
+    boom.read();
     boom.estimate();
+    boom.print();
 
     // Wait for user confirmation
     cout << endl << "Press enter to continue..." << endl;
-    cin.get();
-    boom.~Tree();
+    cin.get();    
     return 0;
 }
 
@@ -208,6 +289,9 @@ void indent(int l) {
     }
 }
 
+
+//We hebben niet gevonden hoe we de data uit de json file in onze boom krijgen dit hebben we dus geforceerd
+//onderstaande code wordt dus niet gebruikt
 void readJSON(std::ifstream& fileStream, int l)
 {
     string name;
